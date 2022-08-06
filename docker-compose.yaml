@@ -47,7 +47,12 @@ services:
   api:
     build: ./api
     restart: always
+    environment:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}  # .envファイルに環境変数を設定
+      - MYSQL_DATABASE=eco
+      - MYSQL_USER=eco
     volumes:
       - ./api/app:/go/src/app
+    command: go run main.go
     
     
