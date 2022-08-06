@@ -1,0 +1,53 @@
+version: "3.8"
+
+volumes:
+  eco_db:
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    volumes:
+      - ./data:/data
+    ports: 
+      - 25565:25565
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.19.2"
+      MEMORY: "14G"
+      TZ: "Asia/Tokyo"
+    tty: true
+    stdin_open: true
+    depends_on: 
+      - db
+    restart: unless-stopped
+  db:
+    image: mariadb
+    restart: always
+    ports: 
+      - 3306:3306
+    volumes:
+      - eco_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}  # .envファイルに環境変数を設定
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}  # .envファイルに環境変数を設定
+      - MYSQL_DATABASE=eco
+      - MYSQL_USER=eco
+    command: >
+      --character-set-server=utf8
+      --collation-server=utf8_general_ci
+      --default-time-zone='Asia/Tokyo'
+  plugins_list_builder:
+    image: python:3.10.5-alpine3.16
+    volumes:
+      - ./data/plugins:/usr/src/hoge/data
+      - ./py:/usr/src/hoge
+    working_dir: /usr/src/hoge
+    command: python3 main.py
+  api:
+    build: ./api
+    restart: always
+    volumes:
+      - ./api/app:/go/src/app
+    
+    
