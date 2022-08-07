@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/labstack/echo/v4"
-	"hureru_button.com/hureru_button/apis"
-	"hureru_button.com/hureru_button/db"
+	"mc.com/mc/apis"
+	"mc.com/mc/db"
 )
 
 func main() {

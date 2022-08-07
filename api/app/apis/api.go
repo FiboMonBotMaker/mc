@@ -1,5 +1,5 @@
 /*
-フロントエンドで利用するJSONとMP3データを提供するAPI
+Moneyデータをやり取りするためのAPI
 */
 package apis
 
@@ -7,7 +7,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"hureru_button.com/hureru_button/db"
+
+	"mc.com/mc/db"
 )
 
 type MoneyJson struct {

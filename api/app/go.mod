@@ -1,4 +1,4 @@
-module hureru_button.com/hureru_button
+module mc.com/mc
 
 go 1.18
 
