@@ -52,7 +52,7 @@ func GetData(uuid string) []LiteEco {
 	return liteEcos
 }
 
-func AddMoney(uuid string, money float64) {
+func AddMoney(uuid string, money float64) error {
 	engine := getEngine()
 	session := engine.NewSession()
 	defer session.Close()
@@ -62,7 +62,7 @@ Retake:
 	result, err := engine.Where("uuid = ?", uuid).Get(&liteEco)
 	if err != nil {
 		session.Rollback()
-		log.Fatalf("err: %v", err)
+		return err
 	}
 	if !result {
 		liteEco.Money = 3000
@@ -70,11 +70,11 @@ Retake:
 		result, err := engine.InsertOne(liteEco)
 		if err != nil {
 			session.Rollback()
-			log.Fatalf("err: %v", err)
+			return err
 		}
 		if result == 0 {
 			session.Rollback()
-			log.Fatalf("missing value %d result", result)
+			return err
 		}
 		goto Retake
 	}
@@ -82,14 +82,15 @@ Retake:
 	bresult, err := engine.ID(liteEco.ID).Cols("money").Update(&liteEco)
 	if err != nil {
 		session.Rollback()
-		log.Fatalf("err: %v", err)
+		return err
 	}
 	if bresult == 0 {
 		session.Rollback()
-		log.Fatalf("missing value %d result", bresult)
+		return err
 	}
 	err = session.Commit()
 	if err != nil {
-		log.Fatalf("err: %v", err)
+		return err
 	}
+	return xorm.ErrObjectIsNil
 }

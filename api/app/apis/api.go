@@ -4,8 +4,8 @@ Moneyデータをやり取りするためのAPI
 package apis
 
 import (
-	"os"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo/v4"
 
@@ -24,6 +24,10 @@ type ReceiveJson struct {
 	Pass  string      `json:"pass"`
 }
 
+type Message struct {
+	Message string `json:"message"`
+}
+
 func SetApis(e echo.Echo) {
 	e.POST("/adding", addingMoney)
 	e.GET("/economy", getEcoList)
@@ -35,10 +39,16 @@ func addingMoney(c echo.Context) error {
 		return err
 	}
 	if json.Pass != pass {
-		return 
+		return echo.ErrForbidden
+	}
+	for _, v := range json.Users {
+		err := db.AddMoney(v.Uuid, v.Money)
+		if err != nil {
+			return c.JSON(514, Message{Message: err.Error()})
+		}
 	}
 
-	return c.JSON(http.StatusOK, "adding money")
+	return c.JSON(http.StatusOK, Message{Message: "Adding success"})
 }
 
 func getEcoList(c echo.Context) error {
