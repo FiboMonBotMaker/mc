@@ -92,5 +92,5 @@ Retake:
 	if err != nil {
 		return err
 	}
-	return xorm.ErrObjectIsNil
+	return nil
 }
