@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"log"
 
+	_ "github.com/go-sql-driver/mysql"
 	"xorm.io/xorm"
 )
 
 type LiteEco struct {
 	ID    int     `xorm:"id pk"`
-	UUID  string  `xorm:"uuid varchar(36)"`
+	Uuid  string  `xorm:"uuid varchar(36) notnull"`
 	Money float64 `xorm:"money"`
 }
 
@@ -36,14 +37,14 @@ func getEngine() *xorm.Engine {
 	return engine
 }
 
-func GetData(uuids []string) []LiteEco {
+func GetData(uuid string) []LiteEco {
 	engine := getEngine()
 	liteEcos := make([]LiteEco, 0, 20)
 	err := xorm.ErrObjectIsNil
-	if len(uuids) == 0 {
-		err = engine.Desc("money").Find(&liteEcos)
+	if uuid == "" {
+		err = engine.Table("lite_eco").Desc("money").Find(&liteEcos)
 	} else {
-		err = engine.In("uuid", uuids).Desc("money").Find(&liteEcos)
+		err = engine.Table("lite_eco").Where("uuid = ?", uuid).Desc("money").Find(&liteEcos)
 	}
 	if err != nil {
 		log.Fatalf("err: %v", err)
@@ -65,7 +66,7 @@ Retake:
 	}
 	if !result {
 		liteEco.Money = 3000
-		liteEco.UUID = uuid
+		liteEco.Uuid = uuid
 		result, err := engine.InsertOne(liteEco)
 		if err != nil {
 			session.Rollback()

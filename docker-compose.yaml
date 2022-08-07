@@ -49,6 +49,7 @@ services:
     restart: always
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}  # .envファイルに環境変数を設定
+      - API_PASSWORD=${API_PASSWORD}
       - MYSQL_DATABASE=eco
       - MYSQL_USER=eco
     ports: 

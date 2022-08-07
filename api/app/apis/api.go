@@ -4,6 +4,7 @@ Moneyデータをやり取りするためのAPI
 package apis
 
 import (
+	"os"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -11,8 +12,10 @@ import (
 	"mc.com/mc/db"
 )
 
+var pass = os.Getenv("API_PASSWORD")
+
 type MoneyJson struct {
-	UUID  string  `json:"uuid"`
+	Uuid  string  `json:"uuid"`
 	Money float64 `json:"money"`
 }
 
@@ -23,7 +26,7 @@ type ReceiveJson struct {
 
 func SetApis(e echo.Echo) {
 	e.POST("/adding", addingMoney)
-	e.POST("/economy", getEcoList)
+	e.GET("/economy", getEcoList)
 }
 
 func addingMoney(c echo.Context) error {
@@ -31,20 +34,19 @@ func addingMoney(c echo.Context) error {
 	if err := c.Bind(json); err != nil {
 		return err
 	}
+	if json.Pass != pass {
+		return 
+	}
+
 	return c.JSON(http.StatusOK, "adding money")
 }
 
 func getEcoList(c echo.Context) error {
-	params, err := c.FormParams()
-	if err != nil {
-		c.Error(err)
-		return err
-	}
-	uuids := params["uuids"]
+	uuid := c.QueryParam("uuid")
 	json := make([]MoneyJson, 0, 20)
 
-	for _, v := range db.GetData(uuids) {
-		json = append(json, MoneyJson{UUID: v.UUID, Money: v.Money})
+	for _, v := range db.GetData(uuid) {
+		json = append(json, MoneyJson{Uuid: v.Uuid, Money: v.Money})
 	}
 	return c.JSON(http.StatusOK, json)
 }
