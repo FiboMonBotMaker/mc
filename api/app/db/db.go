@@ -37,14 +37,14 @@ func getEngine() *xorm.Engine {
 	return engine
 }
 
-func GetData(uuid string) []LiteEco {
+func GetData(uuids []string) []LiteEco {
 	engine := getEngine()
 	liteEcos := make([]LiteEco, 0, 20)
 	err := xorm.ErrObjectIsNil
-	if uuid == "" {
+	if len(uuids) == 0 {
 		err = engine.Table("lite_eco").Desc("money").Find(&liteEcos)
 	} else {
-		err = engine.Table("lite_eco").Where("uuid = ?", uuid).Desc("money").Find(&liteEcos)
+		err = engine.Table("lite_eco").In("uuid", uuids).Desc("money").Find(&liteEcos)
 	}
 	if err != nil {
 		log.Fatalf("err: %v", err)

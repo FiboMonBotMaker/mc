@@ -28,9 +28,18 @@ type Message struct {
 	Message string `json:"message"`
 }
 
+type Test struct {
+	Uuids []string `json:"uuids"`
+}
+
 func SetApis(e echo.Echo) {
 	e.POST("/adding", addingMoney)
-	e.GET("/economy", getEcoList)
+	e.POST("/economy", getEcoList)
+	e.GET("/memberlist", getMemberList)
+}
+
+func getMemberList(c echo.Context) error {
+	return c.File("/go/src/app/data/linkedaccounts.json")
 }
 
 func addingMoney(c echo.Context) error {
@@ -52,10 +61,13 @@ func addingMoney(c echo.Context) error {
 }
 
 func getEcoList(c echo.Context) error {
-	uuid := c.QueryParam("uuid")
+	uuids := new(Test)
+	if err := c.Bind(uuids); err != nil {
+		return err
+	}
 	json := make([]MoneyJson, 0, 20)
 
-	for _, v := range db.GetData(uuid) {
+	for _, v := range db.GetData(uuids.Uuids) {
 		json = append(json, MoneyJson{Uuid: v.Uuid, Money: v.Money})
 	}
 	return c.JSON(http.StatusOK, json)
