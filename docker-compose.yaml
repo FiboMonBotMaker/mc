@@ -69,12 +69,12 @@ services:
     ports:
       - 80:80
 # しなもんBOTだよ
-  cinnamon_bot:
-    build: ./CinnamonBot
-    restart: always
-    volumes:
-      - ./CinnamonBot/bot:/usr/src/bot
-    environment:
-      - TOKEN=${TOKEN}
-      - GUILD=${GUILD}
-    command: python3 main.py
+  # cinnamon_bot:
+  #   build: ./CinnamonBot
+  #   restart: always
+  #   volumes:
+  #     - ./CinnamonBot/bot:/usr/src/bot
+  #   environment:
+  #     - TOKEN=${TOKEN}
+  #     - GUILD=${GUILD}
+  #   command: python3 main.py

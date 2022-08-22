@@ -4,6 +4,7 @@ https://www.google.com/search?q=worldedit-bukkit-7.2.11.jar
 https://www.google.com/search?q=CoreProtect-21.2.jar
 https://www.google.com/search?q=DiscordSRV-Build-1.25.1.jar
 https://www.google.com/search?q=Vault.jar
+https://www.google.com/search?q=ImageOnMap-4.2.2.jar
 https://www.google.com/search?q=Dynmap-3.4-beta-5-spigot.jar
 https://www.google.com/search?q=CommandPanels.jar
 https://www.google.com/search?q=floodgate-spigot.jar
