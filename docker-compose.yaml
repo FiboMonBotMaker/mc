@@ -1,8 +1,5 @@
 version: "3.8"
 
-volumes:
-  eco_db:
-
 services:
 # マイクラ本体よ
   mc:
@@ -29,7 +26,7 @@ services:
     ports: 
       - 3306:3306
     volumes:
-      - eco_db:/var/lib/mysql
+      - ./eco_db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
